@@ -1,0 +1,99 @@
+name: Config Build Pipeline
+
+on:
+  push:
+    paths:
+      - "config/**"
+      - "src/schema.ts"
+  pull_request:
+    paths:
+      - "config/**"
+      - "src/schema.ts"
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      base-changed: ${{ steps.changes.outputs.base }}
+      staging-changed: ${{ steps.changes.outputs.staging }}
+      prod-changed: ${{ steps.changes.outputs.prod }}
+      utils-changed: ${{ steps.changes.outputs.utils }}
+      schema-changed: ${{ steps.changes.outputs.schema }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            base:
+              - 'config/base.ts'
+            staging:
+              - 'config/staging.ts'
+            prod:
+              - 'config/prod.ts'
+            utils:
+              - 'config/utils.ts'
+            schema:
+              - 'src/schema.ts'
+
+  build-staging:
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.base-changed == 'true' ||
+      needs.detect-changes.outputs.staging-changed == 'true' ||
+      needs.detect-changes.outputs.utils-changed == 'true' ||
+      needs.detect-changes.outputs.schema-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm i
+      - name: Build and output staging config JSON
+        run: |
+          echo "🔧 Building staging configuration..."
+          npm run build:staging
+          echo "✅ Staging configuration built successfully!"
+
+  build-prod:
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.base-changed == 'true' ||
+      needs.detect-changes.outputs.prod-changed == 'true' ||
+      needs.detect-changes.outputs.utils-changed == 'true' ||
+      needs.detect-changes.outputs.schema-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: Install dependencies
+        run: npm i
+      - name: Build and output prod config JSON
+        run: |
+          echo "🔧 Building production configuration..."
+          npm run build:prod
+          echo "✅ Production configuration built successfully!"
+
+  build-base:
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.base-changed == 'true' ||
+      needs.detect-changes.outputs.utils-changed == 'true' ||
+      needs.detect-changes.outputs.schema-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: Install dependencies
+        run: npm i
+      - name: Build and output base config JSON
+        run: |
+          echo "🔧 Building base configuration..."
+          npm run build:base
+          echo "✅ Base configuration built successfully!"

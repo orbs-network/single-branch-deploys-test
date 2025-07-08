@@ -1,0 +1,17 @@
+{
+  "name": "single-branch-deploys-test",
+  "scripts": {
+    "build": "tsc",
+    "build:clean": "rm -rf dist",
+    "build:staging": "npm run build && node -e \"const {staging} = require('./dist/config/staging'); console.log(JSON.stringify(staging, null, 2));\"",
+    "build:prod": "npm run build && node -e \"const {prod} = require('./dist/config/prod'); console.log(JSON.stringify(prod, null, 2));\"",
+    "build:base": "npm run build && node -e \"const {base} = require('./dist/config/base'); console.log(JSON.stringify(base, null, 2));\""
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.20",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
