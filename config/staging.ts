@@ -7,5 +7,3 @@ export const staging = createConfig(base, {
     version: "1.0.0",
   },
 });
-
-console.log("staging", staging);
