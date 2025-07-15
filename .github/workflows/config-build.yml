@@ -25,24 +25,19 @@ jobs:
         id: changes
         with:
           filters: |
-            base:
-              - 'config/base.ts'
             staging:
               - 'config/staging.ts'
+              - 'config/base.ts'
+              - 'config/utils.ts'
             prod:
               - 'config/prod.ts'
-            utils:
+              - 'config/base.ts'
               - 'config/utils.ts'
-            schema:
-              - 'src/schema.ts'
 
   build-staging:
     needs: detect-changes
     if: |
-      needs.detect-changes.outputs.base-changed == 'true' ||
-      needs.detect-changes.outputs.staging-changed == 'true' ||
-      needs.detect-changes.outputs.utils-changed == 'true' ||
-      needs.detect-changes.outputs.schema-changed == 'true'
+      needs.detect-changes.outputs.staging-changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -68,10 +63,7 @@ jobs:
   build-prod:
     needs: detect-changes
     if: |
-      needs.detect-changes.outputs.base-changed == 'true' ||
-      needs.detect-changes.outputs.prod-changed == 'true' ||
-      needs.detect-changes.outputs.utils-changed == 'true' ||
-      needs.detect-changes.outputs.schema-changed == 'true'
+      needs.detect-changes.outputs.prod-changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -91,29 +83,3 @@ jobs:
           npm run build:prod
           echo "=================================="
           echo "✅ Production configuration built successfully!"
-
-  build-base:
-    needs: detect-changes
-    if: |
-      needs.detect-changes.outputs.base-changed == 'true' ||
-      needs.detect-changes.outputs.utils-changed == 'true' ||
-      needs.detect-changes.outputs.schema-changed == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Install dependencies
-        run: npm i
-      - name: Build and output base config JSON
-        run: |
-          echo "🔧 Building base configuration..."
-          echo "Node.js version: $(node --version)"
-          echo "npm version: $(npm --version)"
-          echo ""
-          echo "📄 BASE CONFIG JSON OUTPUT:"
-          echo "=========================="
-          npm run build:base
-          echo "=========================="
-          echo "✅ Base configuration built successfully!"
