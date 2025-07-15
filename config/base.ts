@@ -10,6 +10,6 @@ export const base: Config = {
   database: {
     connectionTimeout: 30000,
     maxConnections: 10,
-    ssl: true,
+    ssl: false,
   },
 };
