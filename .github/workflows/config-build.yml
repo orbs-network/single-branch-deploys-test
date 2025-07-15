@@ -14,11 +14,8 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      base-changed: ${{ steps.changes.outputs.base }}
       staging-changed: ${{ steps.changes.outputs.staging }}
       prod-changed: ${{ steps.changes.outputs.prod }}
-      utils-changed: ${{ steps.changes.outputs.utils }}
-      schema-changed: ${{ steps.changes.outputs.schema }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -35,6 +32,7 @@ jobs:
               - 'config/utils.ts'
 
   build-staging:
+    name: Build Staging Config
     needs: detect-changes
     if: |
       needs.detect-changes.outputs.staging-changed == 'true'
@@ -61,6 +59,7 @@ jobs:
           echo "✅ Staging configuration built successfully!"
 
   build-prod:
+    name: Build Prod Config
     needs: detect-changes
     if: |
       needs.detect-changes.outputs.prod-changed == 'true'
