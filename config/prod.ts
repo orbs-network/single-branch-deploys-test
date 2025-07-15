@@ -11,7 +11,7 @@ export const prod = createConfig(base, {
   database: {
     connectionTimeout: 60000,
     maxConnections: 50,
-    ssl: true,
+    ssl: false,
   },
 });
 
