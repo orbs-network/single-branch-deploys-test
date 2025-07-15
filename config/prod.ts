@@ -14,3 +14,5 @@ export const prod = createConfig(base, {
     ssl: true,
   },
 });
+
+console.log("prod", prod);
