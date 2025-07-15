@@ -64,6 +64,7 @@ jobs:
     if: |
       needs.detect-changes.outputs.prod-changed == 'true'
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -74,6 +75,7 @@ jobs:
       - name: Build and output prod config JSON
         run: |
           echo "🔧 Building production configuration..."
+          echo "✅ Production deployment approved by: ${{ github.actor }}"
           echo "Node.js version: $(node --version)"
           echo "npm version: $(npm --version)"
           echo ""
