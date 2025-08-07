@@ -24,12 +24,15 @@ jobs:
             dev:
               - 'config/base/**'
               - 'config/environments/dev.ts'
+              - 'config/generated/development.json'
             staging:
               - 'config/base/**'
               - 'config/environments/staging.ts'
+              - 'config/generated/staging.json'
             prod:
               - 'config/base/**'
               - 'config/environments/prod.ts'
+              - 'config/generated/production.json'
 
   staging:
     name: Build, validate and deploy staging config
