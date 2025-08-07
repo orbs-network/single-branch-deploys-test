@@ -3,10 +3,8 @@
   "scripts": {
     "build": "tsc",
     "build:clean": "rm -rf dist",
-    "build:staging": "npm run build && node -e \"const {staging} = require('./dist/config/staging'); console.log(JSON.stringify(staging, null, 2));\"",
-    "build:prod": "npm run build && node -e \"const {prod} = require('./dist/config/prod'); console.log(JSON.stringify(prod, null, 2));\"",
-    "build:base": "npm run build && node -e \"const {base} = require('./dist/config/base'); console.log(JSON.stringify(base, null, 2));\"",
-    "gen-schema-types": "npx tsx scripts/generate-types.ts",
+    "typecheck": "tsc --noEmit",
+    "gen-schema-types": "npx tsx src/remote-config/scripts/generate-types.ts",
     "generate-configs": "npx tsx config/scripts/generate-configs.ts",
     "validate-configs": "npx tsx config/scripts/validate-configs.ts",
     "validate-configs-pre-commit": "npx tsx config/scripts/validate-configs-pre-commit.ts"

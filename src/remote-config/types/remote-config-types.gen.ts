@@ -5,6 +5,7 @@
 
 export interface RemoteConfigGlobals {
   something: string;
+  somethingElse: string;
 }
 
 export interface RemoteConfigRaw {

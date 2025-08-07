@@ -4,5 +4,6 @@ import { RemoteConfigRaw } from '@/remote-config/types/remote-config-types.gen'
 export const baseConfig: RemoteConfigRaw = {
   globals: {
     something: 'something',
+    somethingElse: 'something',
   },
 }

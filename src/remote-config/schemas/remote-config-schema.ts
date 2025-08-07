@@ -7,6 +7,7 @@ const Joi = _Joi.defaults((schema) => schema.options({ presence: 'required', all
 
 export const globalsSchema = Joi.object({
   something: Joi.string(),
+  somethingElse: Joi.string().min(5),
 }).meta({ className: 'RemoteConfigGlobals' })
 
 // TODO maybe this gets passed from somewhere

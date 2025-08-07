@@ -5,6 +5,7 @@ import { IRemoteConfig } from './remote-config'
 export const defaultConfig: RemoteConfigRaw = {
   globals: {
     something: 'something',
+    somethingElse: 'someth',
   },
 }
 
