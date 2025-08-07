@@ -12,11 +12,17 @@
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./",
-    "types": []
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
     "src/**/*",
-    "config/**/*"
+    "config/**/*",
+    "scripts/**/*"
   ],
   "exclude": [
     "node_modules",

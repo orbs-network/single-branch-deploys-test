@@ -5,13 +5,22 @@
     "build:clean": "rm -rf dist",
     "build:staging": "npm run build && node -e \"const {staging} = require('./dist/config/staging'); console.log(JSON.stringify(staging, null, 2));\"",
     "build:prod": "npm run build && node -e \"const {prod} = require('./dist/config/prod'); console.log(JSON.stringify(prod, null, 2));\"",
-    "build:base": "npm run build && node -e \"const {base} = require('./dist/config/base'); console.log(JSON.stringify(base, null, 2));\""
+    "build:base": "npm run build && node -e \"const {base} = require('./dist/config/base'); console.log(JSON.stringify(base, null, 2));\"",
+    "gen-schema-types": "npx tsx scripts/generate-types.ts",
+    "generate-configs": "npx tsx config/scripts/generate-configs.ts",
+    "validate-configs": "npx tsx config/scripts/validate-configs.ts",
+    "validate-configs-pre-commit": "npx tsx config/scripts/validate-configs-pre-commit.ts"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.20",
+    "@types/node": "^24.1.0",
+    "joi-to-typescript": "^4.15.0",
+    "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@types/joi": "^17.2.2",
+    "joi": "^17.13.3",
     "lodash": "^4.17.21"
   }
 }
