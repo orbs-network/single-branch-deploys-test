@@ -13,9 +13,13 @@ jobs:
     if: ${{ false }}
     runs-on: ubuntu-latest
     steps: &deploy_steps
-      - name: Print env details
-        shell: bash
-        run: echo "Changes detected in ${{ env.DEPLOY_ENV }} config"
+      - name: Deploy config
+        run: Deploying ${{ env.DEPLOY_ENV }} config...
+
+  validate-config:
+    name: Validate config
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -41,6 +45,7 @@ jobs:
       - name: Validate config
         shell: bash
         run: npm run validate-configs
+
   detect-changes:
     name: Detect changes in config files
     runs-on: ubuntu-latest
@@ -70,6 +75,7 @@ jobs:
   handle-deploy-dev:
     name: Handle dev config changes
     needs: detect-changes
+    environment: dev
     if: |
       needs.detect-changes.outputs.dev-changed == 'true'
     runs-on: ubuntu-latest
@@ -80,6 +86,7 @@ jobs:
   handle-staging-changes:
     name: Handle staging config changes
     needs: detect-changes
+    environment: staging
     if: |
       needs.detect-changes.outputs.staging-changed == 'true'
     runs-on: ubuntu-latest
@@ -90,6 +97,7 @@ jobs:
   handle-prod-changes:
     name: Handle prod config changes
     needs: detect-changes
+    environment: prod
     if: |
       needs.detect-changes.outputs.prod-changed == 'true'
     runs-on: ubuntu-latest
