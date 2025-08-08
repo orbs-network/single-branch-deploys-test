@@ -9,16 +9,21 @@ runs:
   using: 'composite'
   steps:
     - name: Print env details
-      run: echo "Changes detected in ${{ inputs.env }} config"
+      shell: bash
+      run: |
+        echo "Changes detected in ${{ inputs.env }} config"
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
         node-version: '22'
     - name: Install dependencies
+      shell: bash
       run: npm i
     - name: Generate config
+      shell: bash
       run: npm run generate-configs
     - name: Check config/generated JSON files are up to date
+      shell: bash
       run: |
         if [ -n "$(git diff --name-only config/generated)" ]; then
           echo "❌ Error: Generated config files have uncommitted changes!"
@@ -30,4 +35,5 @@ runs:
         fi
         echo "✅ No uncommitted changes detected in config/generated"
     - name: Validate config
+      shell: bash
       run: npm run validate-configs
