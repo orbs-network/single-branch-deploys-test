@@ -9,6 +9,38 @@ on:
       - 'src/schema.ts'
 
 jobs:
+  _handle-deploy:
+    if: ${{ false }}
+    runs-on: ubuntu-latest
+    steps: &deploy_steps
+      - name: Print env details
+        shell: bash
+        run: echo "Changes detected in ${{ env.DEPLOY_ENV }} config"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        shell: bash
+        run: npm i
+      - name: Generate config
+        shell: bash
+        run: npm run generate-configs
+      - name: Check config/generated JSON files are up to date
+        shell: bash
+        run: |
+          if [ -n "$(git diff --name-only config/generated)" ]; then
+            echo "❌ Error: Generated config files have uncommitted changes!"
+            echo "The following files were modified:"
+            git diff --name-only config/generated
+            echo ""
+            echo "👉 Please run 'npm run generate-configs' locally and commit the updated files."
+            exit 1
+          fi
+          echo "✅ No uncommitted changes detected in config/generated"
+      - name: Validate config
+        shell: bash
+        run: npm run validate-configs
   detect-changes:
     name: Detect changes in config files
     runs-on: ubuntu-latest
@@ -24,7 +56,7 @@ jobs:
           filters: |
             dev:
               - 'config/base/**'
-              - 'config/environments/dev.ts'
+              - 'config/environments/development.ts'
               - 'config/generated/development.json'
             staging:
               - 'config/base/**'
@@ -32,7 +64,7 @@ jobs:
               - 'config/generated/staging.json'
             prod:
               - 'config/base/**'
-              - 'config/environments/prod.ts'
+              - 'config/environments/production.ts'
               - 'config/generated/production.json'
 
   handle-deploy-dev:
@@ -41,11 +73,9 @@ jobs:
     if: |
       needs.detect-changes.outputs.dev-changed == 'true'
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/config-deploy
-        with:
-          env: dev
+    env:
+      DEPLOY_ENV: dev
+    steps: *deploy_steps
 
   handle-staging-changes:
     name: Handle staging config changes
@@ -53,11 +83,9 @@ jobs:
     if: |
       needs.detect-changes.outputs.staging-changed == 'true'
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/config-deploy
-        with:
-          env: staging
+    env:
+      DEPLOY_ENV: staging
+    steps: *deploy_steps
 
   handle-prod-changes:
     name: Handle prod config changes
@@ -65,8 +93,6 @@ jobs:
     if: |
       needs.detect-changes.outputs.prod-changed == 'true'
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/config-deploy
-        with:
-          env: prod
+    env:
+      DEPLOY_ENV: prod
+    steps: *deploy_steps
