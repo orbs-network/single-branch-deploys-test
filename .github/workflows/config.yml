@@ -42,7 +42,7 @@ jobs:
       needs.detect-changes.outputs.dev-changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/config-deploy/action.yml
+      - uses: ./.github/actions/config-deploy
         with:
           env: dev
 
@@ -53,7 +53,7 @@ jobs:
       needs.detect-changes.outputs.staging-changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/config-deploy/action.yml
+      - uses: ./.github/actions/config-deploy
         with:
           env: staging
 
@@ -64,6 +64,6 @@ jobs:
       needs.detect-changes.outputs.prod-changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/config-deploy/action.yml
+      - uses: ./.github/actions/config-deploy
         with:
           env: prod
