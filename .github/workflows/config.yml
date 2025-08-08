@@ -13,6 +13,7 @@ jobs:
     name: Detect changes in config files
     runs-on: ubuntu-latest
     outputs:
+      dev-changed: ${{ steps.changes.outputs.dev }}
       staging-changed: ${{ steps.changes.outputs.staging }}
       prod-changed: ${{ steps.changes.outputs.prod }}
     steps:
@@ -34,31 +35,35 @@ jobs:
               - 'config/environments/prod.ts'
               - 'config/generated/production.json'
 
-  staging:
-    name: Build, validate and deploy staging config
+  handle-deploy-dev:
+    name: Handle dev config changes
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.dev-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/config-deploy/action.yml
+        with:
+          env: dev
+
+  handle-staging-changes:
+    name: Handle staging config changes
     needs: detect-changes
     if: |
       needs.detect-changes.outputs.staging-changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: ./.github/actions/config-deploy/action.yml
         with:
-          node-version: '22'
-      - name: Install dependencies
-        run: npm i
-      - name: Generate config
-        run: npm run generate-configs
-      - name: Check config/generated JSON files are up to date
-        run: |
-          if [ -n "$(git diff --name-only config/generated)" ]; then
-            echo "❌ Error: Generated config files have uncommitted changes!"
-            echo "The following files were modified:"
-            git diff --name-only config/generated
-            echo ""
-            echo "👉 Please run 'npm run generate-configs' locally and commit the updated files."
-            exit 1
-          fi
-          echo "✅ No uncommitted changes detected in config/generated"
-      - name: Validate config
-        run: npm run validate-configs
+          env: staging
+
+  handle-prod-changes:
+    name: Handle prod config changes
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.prod-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/config-deploy/action.yml
+        with:
+          env: prod

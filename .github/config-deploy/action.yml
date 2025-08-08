@@ -1,0 +1,33 @@
+name: Build, validate and deploy config
+description: Builds, validates and deploys config
+inputs:
+  env:
+    description: 'Environment to deploy to'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Print env details
+      run: echo "Changes detected in ${{ inputs.env }} config"
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Install dependencies
+      run: npm i
+    - name: Generate config
+      run: npm run generate-configs
+    - name: Check config/generated JSON files are up to date
+      run: |
+        if [ -n "$(git diff --name-only config/generated)" ]; then
+          echo "❌ Error: Generated config files have uncommitted changes!"
+          echo "The following files were modified:"
+          git diff --name-only config/generated
+          echo ""
+          echo "👉 Please run 'npm run generate-configs' locally and commit the updated files."
+          exit 1
+        fi
+        echo "✅ No uncommitted changes detected in config/generated"
+    - name: Validate config
+      run: npm run validate-configs
