@@ -9,13 +9,6 @@ on:
       - 'src/schema.ts'
 
 jobs:
-  _handle-deploy:
-    if: ${{ false }}
-    runs-on: ubuntu-latest
-    steps: &deploy_steps
-      - name: Deploy config
-        run: Deploying ${{ env.DEPLOY_ENV }} config...
-
   validate-config:
     name: Validate config
     runs-on: ubuntu-latest
@@ -82,7 +75,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEPLOY_ENV: development
-    steps: *deploy_steps
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/config-deploy
+        name: Deploy dev config
+        with:
+          env: development
 
   handle-staging-changes:
     name: Handle staging config changes
@@ -93,7 +91,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEPLOY_ENV: staging
-    steps: *deploy_steps
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/config-deploy
+        name: Deploy staging config
+        with:
+          env: staging
 
   handle-prod-changes:
     name: Handle prod config changes
@@ -104,4 +107,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEPLOY_ENV: production
-    steps: *deploy_steps
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/config-deploy
+        name: Deploy prod config
+        with:
+          env: production
