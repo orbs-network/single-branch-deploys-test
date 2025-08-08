@@ -69,7 +69,6 @@ jobs:
   handle-deploy-dev:
     name: Handle dev config changes
     needs: detect-changes
-    environment: dev
     if: |
       needs.detect-changes.outputs.dev-changed == 'true'
     runs-on: ubuntu-latest
@@ -101,7 +100,7 @@ jobs:
   handle-prod-changes:
     name: Handle prod config changes
     needs: detect-changes
-    environment: prod
+    environment: production
     if: |
       needs.detect-changes.outputs.prod-changed == 'true'
     runs-on: ubuntu-latest
