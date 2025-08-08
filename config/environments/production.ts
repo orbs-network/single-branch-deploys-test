@@ -5,6 +5,6 @@ import { DeepPartial } from '../utils/partial'
 export const productionOverrides: DeepPartial<RemoteConfigRaw> = {
   globals: {
     something: 'something',
-    somethingElse: 'somethingElse!@@@AAAAA',
+    somethingElse: 'somethingElse!@@@AAAAABBB',
   },
 }

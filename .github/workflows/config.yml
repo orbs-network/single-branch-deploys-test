@@ -48,6 +48,7 @@ jobs:
 
   detect-changes:
     name: Detect changes in config files
+    needs: validate-config
     runs-on: ubuntu-latest
     outputs:
       dev-changed: ${{ steps.changes.outputs.dev }}
@@ -80,7 +81,7 @@ jobs:
       needs.detect-changes.outputs.dev-changed == 'true'
     runs-on: ubuntu-latest
     env:
-      DEPLOY_ENV: dev
+      DEPLOY_ENV: development
     steps: *deploy_steps
 
   handle-staging-changes:
@@ -102,5 +103,5 @@ jobs:
       needs.detect-changes.outputs.prod-changed == 'true'
     runs-on: ubuntu-latest
     env:
-      DEPLOY_ENV: prod
+      DEPLOY_ENV: production
     steps: *deploy_steps
