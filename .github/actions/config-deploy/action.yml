@@ -12,6 +12,14 @@ runs:
       shell: bash
       run: |
         echo "Deploying ${{ inputs.env }} config..."
+    - name: Manual Workflow Approval
+      uses: trstringer/manual-approval@v1.11.0
+      with:
+        secret: ${{ github.TOKEN }}
+        approvers: perps-admin
+        minimum-approvals: 1
+        issue-title: 'Deploy config to ${{ inputs.env }}'
+        issue-body: 'Please approve or deny the deployment of config to ${{ inputs.env }}.'
     # - uses: actions/setup-node@v4
     #   with:
     #     node-version: '22'
