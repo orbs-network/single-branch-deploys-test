@@ -8,6 +8,9 @@ on:
       - 'config/**'
       - 'src/schema.ts'
 
+permissions:
+  issues: write
+
 jobs:
   validate-config:
     name: Validate config
