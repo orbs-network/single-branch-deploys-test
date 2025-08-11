@@ -11,7 +11,7 @@ on:
 jobs:
   validate-config:
     name: Validate config
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -42,7 +42,7 @@ jobs:
   detect-changes:
     name: Detect changes in config files
     needs: validate-config
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       dev-changed: ${{ steps.changes.outputs.dev }}
       staging-changed: ${{ steps.changes.outputs.staging }}
@@ -71,7 +71,7 @@ jobs:
     needs: detect-changes
     if: |
       needs.detect-changes.outputs.dev-changed == 'true'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       DEPLOY_ENV: development
     steps:
@@ -84,10 +84,9 @@ jobs:
   handle-staging-changes:
     name: Handle staging config changes
     needs: detect-changes
-    environment: staging
     if: |
       needs.detect-changes.outputs.staging-changed == 'true'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       DEPLOY_ENV: staging
     steps:
@@ -100,10 +99,9 @@ jobs:
   handle-prod-changes:
     name: Handle prod config changes
     needs: detect-changes
-    environment: production
     if: |
       needs.detect-changes.outputs.prod-changed == 'true'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       DEPLOY_ENV: production
     steps:
