@@ -8,18 +8,16 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Print env details
-      shell: bash
-      run: |
-        echo "Deploying ${{ inputs.env }} config..."
     - name: Manual Workflow Approval
       uses: trstringer/manual-approval@v1.11.0
+      env:
+        ENV_NAME: ${{ inputs.env }}
       with:
-        secret: ${{ github.TOKEN }}
+        secret: ${{ secrets.GITHUB_TOKEN }}
         approvers: Luke-Rogerson, crypto-perry
         minimum-approvals: 1
-        issue-title: 'Deploy config to ${{ inputs.env }}'
-        issue-body: 'Please approve or deny the deployment of config to ${{ inputs.env }}.'
+        issue-title: 'Deploy config to ${ENV_NAME}'
+        issue-body: 'Please approve or deny the deployment of config to ${ENV_NAME}.'
     # - uses: actions/setup-node@v4
     #   with:
     #     node-version: '22'

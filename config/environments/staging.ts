@@ -5,6 +5,6 @@ import { DeepPartial } from '../utils/partial'
 export const stagingOverrides: DeepPartial<RemoteConfigRaw> = {
   globals: {
     something: 'cool!!!!!!!!!',
-    somethingElse: '77777777777',
+    somethingElse: '88888888888',
   },
 }
