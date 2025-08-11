@@ -15,7 +15,6 @@ runs:
     - name: Manual Workflow Approval
       uses: trstringer/manual-approval@v1.11.0
       with:
-        secret: ${{ github.TOKEN }}
         approvers: perps-admin
         minimum-approvals: 1
         issue-title: 'Deploy config to ${{ inputs.env }}'
